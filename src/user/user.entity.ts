@@ -22,6 +22,15 @@ class User {
 
     @Column({ nullable: true })
     avatar: string;
+
+    @Column ({ default: false})
+    isActive: boolean;
+
+    @Column({ nullable: true })
+    otp: string;
+  
+    @Column({ nullable: true, type: 'timestamp' })
+    otpExpiry: Date;
 }
 
 export default User;
