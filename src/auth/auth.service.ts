@@ -6,6 +6,8 @@ import { SignupDto } from './dto/signup.dto';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
+import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +15,7 @@ export class AuthService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly configService: ConfigService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async signup(signupDto: SignupDto): Promise<{ message: string }> {
@@ -80,5 +83,31 @@ export class AuthService {
     await this.userRepository.save(user);
 
     return { message: 'Account activated successfully' };
+  }
+
+  async login(loginDto: LoginDto): Promise<{ user: any, token: string }> {
+    const { email, password } = loginDto;
+
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is not activated. Please verify OTP.');
+    }
+
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatched) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const token = this.jwtService.sign({
+      id: user.id,
+      email: user.email,
+    });
+
+    return { user, token };
   }
 }
