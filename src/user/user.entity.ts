@@ -21,6 +21,12 @@ class User {
     birthday: string;
 
     @Column({ nullable: true })
+    phone: string;
+
+    @Column({ nullable: true })
+    address: string;
+
+    @Column({ nullable: true })
     avatar: string;
 
     @Column ({ default: false})
