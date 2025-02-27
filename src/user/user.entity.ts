@@ -1,5 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+export enum UserRole {
+    USER = 'USER',
+    SELLER = 'SELLER',
+    ADMIN = 'ADMIN',
+  }
+  
 @Entity('user')
 class User {
     @PrimaryGeneratedColumn()
@@ -37,6 +43,12 @@ class User {
   
     @Column({ nullable: true, type: 'timestamp' })
     otpExpiry: Date;
+
+    @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
+    role: UserRole;
+
+    @Column({ type: 'boolean', default: false })
+    isSellerRequestPending: boolean;
 }
 
 export default User;
