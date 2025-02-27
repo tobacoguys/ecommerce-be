@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { SellerRequest } from "./seller-request.entity";
 
 export enum UserRole {
     USER = 'USER',
@@ -49,6 +50,9 @@ class User {
 
     @Column({ type: 'boolean', default: false })
     isSellerRequestPending: boolean;
+
+    @OneToMany(() => SellerRequest, (sellerRequest) => sellerRequest.user)
+    sellerRequests: SellerRequest[];
 }
 
 export default User;

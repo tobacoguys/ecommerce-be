@@ -3,12 +3,15 @@ import { Repository } from 'typeorm';
 import User, { UserRole } from './entity/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SellerRequest, SellerRequestStatus } from './entity/seller-request.entity';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(SellerRequest)
+        private readonly requestSellerRepository: Repository<SellerRequest>
     ) {}
 
     async updateProfile( userId: string, updateUserDto: UpdateUserDto): Promise<User> {
@@ -29,7 +32,7 @@ export class UserService {
     }
 
     async requestSeller(userId: string): Promise<{ message: string }> {
-        const user = await this.userRepository.findOne({ where: { id: userId }});
+        const user = await this.userRepository.findOne({ where: { id: userId }, relations: ['sellerRequests'] });
 
         if (!user) {
             throw new NotFoundException('User not found');
@@ -41,6 +44,13 @@ export class UserService {
 
         user.isSellerRequestPending = true;
         await this.userRepository.save(user);
+
+        const newRequest = this.requestSellerRepository.create({ 
+            user, 
+            username: user.username, 
+            status: SellerRequestStatus.PENDING 
+        });
+        await this.requestSellerRepository.save(newRequest);
 
         return { message: 'Request submitted successfully' };
     }
