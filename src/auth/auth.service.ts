@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { InjectRepository } from '@nestjs/typeorm';
-import User from 'src/user/user.entity';
+import User from 'src/user/entity/user.entity';
 import { SignupDto } from './dto/signup.dto';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';

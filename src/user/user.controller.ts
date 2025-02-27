@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Req, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -24,5 +24,11 @@ export class UserController {
             updateUserDto,
         );
         return { message: 'Profile updated successfully', data: updatedUser };
+    }
+
+    @Post('/request-seller')
+    @UseGuards(JwtAuthGuard)
+    async requestSeller(@Req() req: RequestWithUser) {
+        return await this.userService.requestSeller(req.user.id);
     }
 }
