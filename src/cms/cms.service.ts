@@ -40,6 +40,11 @@ export class CmsService {
         user.isSellerRequestPending = false;
         await this.userRepository.save(user);
 
+        await this.sellerRequestRepository.update(
+            { user: { id: userId }, status: SellerRequestStatus.PENDING },
+            { status: SellerRequestStatus.REJECTED },
+        );
+
         return { message: 'Seller request rejected successfully' };
     }
 }
