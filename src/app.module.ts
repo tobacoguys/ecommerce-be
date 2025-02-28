@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProductController } from './product/product.controller';
 import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
+import { CmsModule } from './cms/cms.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ProductModule } from './product/product.module';
     UserModule,
     AuthModule,
     ProductModule,
+    CmsModule,
   ],
   controllers: [AppController, ProductController],
   providers: [AppService, ProductService],

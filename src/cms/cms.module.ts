@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { CmsService } from './cms.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import User from 'src/user/entity/user.entity';
+import { CmsController } from './cms.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './strategy/jwt.strategy';
-import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -25,18 +26,11 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
         };
       },
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
+    AuthModule,
   ],
-  controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    JwtAuthGuard,
-  ],
-  exports: [
-    JwtStrategy,
-    PassportModule,
-    JwtAuthGuard,
-  ]
+  controllers: [CmsController],
+  providers: [CmsService, JwtStrategy, JwtAuthGuard],
+  exports: [JwtStrategy, PassportModule, JwtAuthGuard],
 })
-export class AuthModule {}
+export class CmsModule {}
