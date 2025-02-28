@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { AuthModule } from 'src/auth/auth.module';
+import { SellerRequest } from 'src/user/entity/seller-request.entity';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { AuthModule } from 'src/auth/auth.module';
         };
       },
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, SellerRequest]),
     AuthModule,
   ],
   controllers: [CmsController],

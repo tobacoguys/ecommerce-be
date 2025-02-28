@@ -2,12 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import User, { UserRole } from 'src/user/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { SellerRequest, SellerRequestStatus } from 'src/user/entity/seller-request.entity';
 
 @Injectable()
 export class CmsService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(SellerRequest)
+        private readonly sellerRequestRepository: Repository<SellerRequest>,
     ) {}
 
     async approveSeller(userId: string): Promise<{ message: string }> {
@@ -19,6 +22,11 @@ export class CmsService {
         user.role = UserRole.SELLER;
         user.isSellerRequestPending = false;
         await this.userRepository.save(user);
+
+        await this.sellerRequestRepository.update(
+            { user: { id: userId }, status: SellerRequestStatus.PENDING },
+            { status: SellerRequestStatus.APPROVED },
+        )
 
         return { message: 'Seller request approved successfully' };
     }
