@@ -12,4 +12,9 @@ export class CmsController {
     async approveSeller(@Param('userId') userId: string) {
         return this.cmsService.approveSeller(userId);
     }
+
+    @Patch('/reject-seller/:userId')
+    async rejectSeller(@Param('userId') userId: string) {
+        return this.cmsService.rejectSeller(userId);
+    }
 }

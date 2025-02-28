@@ -22,4 +22,16 @@ export class CmsService {
 
         return { message: 'Seller request approved successfully' };
     }
+
+    async rejectSeller(userId: string): Promise<{ message: string }> {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user || !user.isSellerRequestPending) {
+            throw new BadRequestException('User not found or seller request is not pending');
+        }
+
+        user.isSellerRequestPending = false;
+        await this.userRepository.save(user);
+
+        return { message: 'Seller request rejected successfully' };
+    }
 }
