@@ -6,8 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { ProductController } from './product/product.controller';
-import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
 import { CmsModule } from './cms/cms.module';
 
@@ -31,7 +29,7 @@ import { CmsModule } from './cms/cms.module';
     ProductModule,
     CmsModule,
   ],
-  controllers: [AppController, ProductController],
-  providers: [AppService, ProductService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

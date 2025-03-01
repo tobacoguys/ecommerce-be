@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SellerRequest } from "./seller-request.entity";
+import Product from 'src/product/product.entity';
 
 export enum UserRole {
     USER = 'USER',
@@ -53,6 +54,9 @@ class User {
 
     @OneToMany(() => SellerRequest, (sellerRequest) => sellerRequest.user)
     sellerRequests: SellerRequest[];
+
+    @OneToMany(() => Product, product => product.seller)
+    products: Product[];
 }
 
 export default User;
