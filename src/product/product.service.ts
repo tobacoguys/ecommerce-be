@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import Product from './product.entity';
@@ -31,5 +31,20 @@ export class ProductService {
         }
 
         return this.productRepository.find({ where: { seller: user } });
+    }
+
+    async updateProduct(user: User, productId: string, updateData: Partial<Product>): Promise<Product> {
+        const product = await this.productRepository.findOne({ where: { id: productId }, relations: ['seller'] });
+
+        if (!product) {
+            throw new NotFoundException('Product not found');
+        }
+
+        if (product.seller.id !== user.id) {
+            throw new ForbiddenException('You are not the owner of this product');
+        }
+
+        Object.assign(product, updateData);
+        return this.productRepository.save(product);
     }
 }
