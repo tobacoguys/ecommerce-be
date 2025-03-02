@@ -24,4 +24,12 @@ export class ProductService {
     
         return this.productRepository.save(product);
       }
+
+    async getMyProduct(user: User): Promise<Product[]> {
+        if (user.role !== UserRole.SELLER) {
+          throw new ForbiddenException('Only sellers can create products');
+        }
+
+        return this.productRepository.find({ where: { seller: user } });
+    }
 }
