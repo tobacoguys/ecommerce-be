@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import Product from './product.entity';
 import User, { UserRole } from 'src/user/entity/user.entity';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -11,17 +12,16 @@ export class ProductService {
         private readonly productRepository: Repository<Product>,
     ) {}
 
-    async createProduct(user: User, data: Partial<Product>): Promise<Product> {
+    async createProduct(user: User, createProductDto: CreateProductDto): Promise<Product> {
         if (user.role !== UserRole.SELLER) {
-            throw new ForbiddenException('Only sellers can create products');
+          throw new ForbiddenException('Only sellers can create products');
         }
-
-        const newProduct = this.productRepository.create({
-            ...data,
-            seller: user,
+    
+        const product = this.productRepository.create({
+          ...createProductDto,
+          seller: user,
         });
-
-        const savedProduct = await this.productRepository.save(newProduct);
-        return savedProduct;
-    }
+    
+        return this.productRepository.save(product);
+      }
 }
