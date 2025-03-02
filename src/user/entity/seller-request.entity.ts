@@ -15,9 +15,6 @@ export class SellerRequest {
   @ManyToOne(() => User, (user) => user.sellerRequests, { onDelete: 'CASCADE' })
   user: User;
 
-  @Column()
-  username: string;
-
   @Column({ type: 'enum', enum: SellerRequestStatus, default: SellerRequestStatus.PENDING })
   status: SellerRequestStatus;
 

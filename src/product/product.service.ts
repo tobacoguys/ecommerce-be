@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Product from './product.entity';
 import { Repository } from 'typeorm';
+import Product from './product.entity';
 import User, { UserRole } from 'src/user/entity/user.entity';
 
 @Injectable()
@@ -23,6 +23,5 @@ export class ProductService {
 
         const savedProduct = await this.productRepository.save(newProduct);
         return savedProduct;
-        
     }
 }

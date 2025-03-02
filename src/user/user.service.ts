@@ -39,7 +39,7 @@ export class UserService {
         }
 
         if (user.isSellerRequestPending || user.role === UserRole.SELLER) {
-            throw new BadRequestException('You have submitted a request or are already a Seller')
+            throw new BadRequestException('You have submitted a request or are already a Seller');
         }
 
         user.isSellerRequestPending = true;
@@ -47,7 +47,6 @@ export class UserService {
 
         const newRequest = this.requestSellerRepository.create({ 
             user, 
-            username: user.username, 
             status: SellerRequestStatus.PENDING 
         });
         await this.requestSellerRepository.save(newRequest);
