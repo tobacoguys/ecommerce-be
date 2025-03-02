@@ -47,4 +47,19 @@ export class ProductService {
         Object.assign(product, updateData);
         return this.productRepository.save(product);
     }
+
+    async deleteProduct(user: User, productId: string): Promise<{ message: string }> {
+        const product = await this.productRepository.findOne({ where: { id: productId }, relations: ['seller'] });
+
+        if (!product) {
+            throw new NotFoundException('Product not found');
+        }
+
+        if (product.seller.id !== user.id) {
+            throw new ForbiddenException('You are not the owner of this product');
+        }
+
+        await this.productRepository.delete(product);
+        return { message: 'Product deleted successfully' };
+    }
 }
