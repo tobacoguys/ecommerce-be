@@ -1,4 +1,18 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { CategoryService } from './category.service';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { Roles } from 'src/auth/decorator/role.decorator';
+import User, { UserRole } from 'src/user/entity/user.entity';
+import { CreateCategoryDto } from 'src/cms/dto/create-category.dto';
 
 @Controller('category')
-export class CategoryController {}
+export class CategoryController {
+    constructor(private readonly categoryService: CategoryService) {}
+
+    @UseGuards(JwtAuthGuard)
+    @Roles(UserRole.ADMIN)
+    @Post('/create')
+    async createCategory(@Req() req: { user: User }, @Body() createCategoryDto: CreateCategoryDto) {
+        return this.categoryService.createCategory(req.user, createCategoryDto);
+    }
+}
