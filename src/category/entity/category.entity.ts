@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+@Entity()
 export class Category {
     @PrimaryGeneratedColumn()
     id: string;

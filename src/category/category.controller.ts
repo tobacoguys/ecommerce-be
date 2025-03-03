@@ -3,7 +3,7 @@ import { CategoryService } from './category.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/decorator/role.decorator';
 import User, { UserRole } from 'src/user/entity/user.entity';
-import { CreateCategoryDto } from 'src/cms/dto/create-category.dto';
+import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
 
 @Controller('category')
 export class CategoryController {
