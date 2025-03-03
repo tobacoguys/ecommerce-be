@@ -25,4 +25,8 @@ export class CategoryService {
         const category = this.categoryRepository.create(createCategoryDto);
         return this.categoryRepository.save(category);
     }
+
+    async findAll(): Promise<Category[]> {
+        return this.categoryRepository.find();
+    }
 }
