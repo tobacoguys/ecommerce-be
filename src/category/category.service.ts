@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Category } from './entity/category.entity';
 import User, { UserRole } from 'src/user/entity/user.entity';
 import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -36,5 +37,26 @@ export class CategoryService {
             throw new NotFoundException('Category not found');
         }
         return category;
+    }
+
+    async update(user: User, id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+        if (user.role !== UserRole.ADMIN) {
+            throw new ForbiddenException('Only admins can update categories');
+        }
+
+        const category = await this.findOne(id);
+        if (!category) {
+            throw new NotFoundException('Category not found');
+        }
+
+        if (updateCategoryDto.name && updateCategoryDto.name !== category.name) {
+            const existingCategory = await this.categoryRepository.findOne({ where: { name: updateCategoryDto.name } });
+            if (existingCategory) {
+                throw new ConflictException('Category name already exists');
+            }
+        }
+
+        Object.assign(category, updateCategoryDto);
+        return this.categoryRepository.save(category);
     }
 }
