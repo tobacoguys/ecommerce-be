@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, ConflictException } from '@nestjs/common';
+import { ForbiddenException, Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from './entity/category.entity';
@@ -28,5 +28,13 @@ export class CategoryService {
 
     async findAll(): Promise<Category[]> {
         return this.categoryRepository.find();
+    }
+
+    async findOne(id: string): Promise<Category> {
+        const category = await this.categoryRepository.findOne({ where: { id } });
+        if (!category) {
+            throw new NotFoundException('Category not found');
+        }
+        return category;
     }
 }

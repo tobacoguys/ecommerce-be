@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/decorator/role.decorator';
@@ -19,5 +19,10 @@ export class CategoryController {
     @Get()
     async findAll() {
         return this.categoryService.findAll();
+    }
+
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        return this.categoryService.findOne(id);
     }
 }
