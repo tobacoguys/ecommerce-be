@@ -59,4 +59,18 @@ export class CategoryService {
         Object.assign(category, updateCategoryDto);
         return this.categoryRepository.save(category);
     }
+
+    async remove(user: User, id: string): Promise<{ message: string }> {
+        if (user.role !== UserRole.ADMIN) {
+            throw new ForbiddenException('Only admins can delete categories');
+        }
+
+        const category = await this.findOne(id);
+        if (!category) {
+            throw new NotFoundException('Category not found');
+        }
+
+        await this.categoryRepository.delete(category);
+        return { message: 'Category deleted successfully' };
+    }
 }
