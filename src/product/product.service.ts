@@ -4,22 +4,36 @@ import { Repository } from 'typeorm';
 import Product from './product.entity';
 import User, { UserRole } from 'src/user/entity/user.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+import { Category } from 'src/category/entity/category.entity';
 
 @Injectable()
 export class ProductService {
     constructor(
         @InjectRepository(Product)
         private readonly productRepository: Repository<Product>,
+        @InjectRepository(Category)
+        private readonly categoryRepository: Repository<Category>,
     ) {}
 
-    async createProduct(user: User, createProductDto: CreateProductDto): Promise<Product> {
+    async createProduct(user: User, createProductDto: CreateProductDto, categoryId: string): Promise<Product> {
+        if (!categoryId) {
+            throw new NotFoundException('Category ID is required');
+        }
+
+        const category = await this.categoryRepository.findOne({ where: { id: categoryId } });
+        
+        if (!category) {
+            throw new NotFoundException('Category not found');
+        }
+
         if (user.role !== UserRole.SELLER) {
           throw new ForbiddenException('Only sellers can create products');
         }
     
         const product = this.productRepository.create({
-          ...createProductDto,
-          seller: user,
+            ...createProductDto,
+            seller: user,
+            category,
         });
     
         return this.productRepository.save(product);
