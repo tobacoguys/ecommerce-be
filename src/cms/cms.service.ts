@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import User, { UserRole } from 'src/user/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,7 +13,11 @@ export class CmsService {
         private readonly sellerRequestRepository: Repository<SellerRequest>,
     ) {}
 
-    async approveSeller(userId: string): Promise<{ message: string }> {
+    async approveSeller(userId: string, admin: User): Promise<{ message: string }> {
+        if (admin.role !== UserRole.ADMIN) {
+            throw new ForbiddenException('Only admins can approve seller requests');
+        }
+
         const user = await this.userRepository.findOne({ where: { id: userId } });
         if (!user || !user.isSellerRequestPending) {
             throw new BadRequestException('User not found or seller request is not pending');
@@ -31,7 +35,11 @@ export class CmsService {
         return { message: 'Seller request approved successfully' };
     }
 
-    async rejectSeller(userId: string): Promise<{ message: string }> {
+    async rejectSeller(userId: string, admin: User): Promise<{ message: string }> {
+        if (admin.role !== UserRole.ADMIN) {
+            throw new ForbiddenException('Only admins can reject seller requests');
+        }
+
         const user = await this.userRepository.findOne({ where: { id: userId } });
         if (!user || !user.isSellerRequestPending) {
             throw new BadRequestException('User not found or seller request is not pending');
