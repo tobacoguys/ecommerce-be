@@ -76,4 +76,8 @@ export class ProductService {
         await this.productRepository.delete(product);
         return { message: 'Product deleted successfully' };
     }
+
+    async findAll(): Promise<Product[]> {
+        return this.productRepository.find();
+    }
 }

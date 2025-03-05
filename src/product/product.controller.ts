@@ -37,4 +37,9 @@ export class ProductController {
     async deleteProduct(@Req() req: { user: User }, @Param('productId') productId: string) {
         return this.productService.deleteProduct(req.user, productId);
     }
+
+    @Get()
+    async findAll() {
+        return this.productService.findAll();
+    }
 }
