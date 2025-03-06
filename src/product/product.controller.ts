@@ -47,4 +47,9 @@ export class ProductController {
     async findOne(@Param('id') id: string) {
         return this.productService.findOne(id);
     }
+
+    @Get('/category/:categoryId')
+    async findByCategory(@Param('categoryId') categoryId: string) {
+        return this.productService.findByCategory(categoryId);
+    }
 }

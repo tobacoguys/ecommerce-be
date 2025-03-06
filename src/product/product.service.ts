@@ -91,4 +91,12 @@ export class ProductService {
         }
         return product;
     }
+
+    async findByCategory(categoryId: string): Promise<Product[]> {
+        const category = await this.categoryRepository.findOne({ where: { id: categoryId } });
+        if (!category) {
+            throw new NotFoundException('Category not found');
+        }
+        return this.productRepository.find({ where: { category: { id: categoryId } }, relations: ['seller', 'category'] });
+    }
 }
