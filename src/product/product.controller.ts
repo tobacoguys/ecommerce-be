@@ -52,4 +52,9 @@ export class ProductController {
     async findByCategory(@Param('categoryId') categoryId: string) {
         return this.productService.findByCategory(categoryId);
     }
+
+    @Get('/seller/:sellerId')
+    async findBySeller(@Param('sellerId') sellerId: string) {
+        return this.productService.findBySeller(sellerId);
+    }
 }

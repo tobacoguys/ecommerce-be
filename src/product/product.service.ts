@@ -99,4 +99,12 @@ export class ProductService {
         }
         return this.productRepository.find({ where: { category: { id: categoryId } }, relations: ['seller', 'category'] });
     }
+
+    async findBySeller(sellerId: string): Promise<Product[]> {
+        const seller = await this.productRepository.findOne({ where: { seller: { id: sellerId } }, relations: ['seller'] });
+        if (!seller) {
+            throw new NotFoundException('Seller not found');
+        }
+        return this.productRepository.find({ where: { seller: { id: sellerId } }, relations: ['seller', 'category'] });
+    }
 }
