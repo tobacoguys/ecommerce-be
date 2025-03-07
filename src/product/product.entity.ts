@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne, OneToMany } from "typeorm";
 import User from 'src/user/entity/user.entity';
 import { Category } from 'src/category/entity/category.entity';
+import { Cart } from "src/cart/cart.entity";
 
 @Entity('product')
 class Product {
@@ -33,6 +34,9 @@ class Product {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @OneToMany(() => Cart, (cart) => cart.product)
+    cart: Cart[];
 }
 
 export default Product;

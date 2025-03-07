@@ -9,6 +9,9 @@ import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { CmsModule } from './cms/cms.module';
 import { CategoryModule } from './category/category.module';
+import { CartController } from './cart/cart.controller';
+import { CartService } from './cart/cart.service';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -30,8 +33,9 @@ import { CategoryModule } from './category/category.module';
     ProductModule,
     CmsModule,
     CategoryModule,
+    CartModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CartController],
+  providers: [AppService, CartService],
 })
 export class AppModule {}
