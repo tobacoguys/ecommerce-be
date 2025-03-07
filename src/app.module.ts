@@ -9,8 +9,6 @@ import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { CmsModule } from './cms/cms.module';
 import { CategoryModule } from './category/category.module';
-import { CartController } from './cart/cart.controller';
-import { CartService } from './cart/cart.service';
 import { CartModule } from './cart/cart.module';
 
 @Module({
@@ -35,7 +33,7 @@ import { CartModule } from './cart/cart.module';
     CategoryModule,
     CartModule,
   ],
-  controllers: [AppController, CartController],
-  providers: [AppService, CartService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

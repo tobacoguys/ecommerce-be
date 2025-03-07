@@ -1,6 +1,6 @@
 import Product from "src/product/product.entity";
 import User from "src/user/entity/user.entity";
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Cart {
@@ -12,4 +12,7 @@ export class Cart {
 
     @ManyToOne(() => Product, (product) => product.cart, { onDelete: 'CASCADE' })
     product: Product;
+
+    @Column({ type: 'int', default: 1 })
+    quantity: number;
 }
