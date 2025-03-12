@@ -24,37 +24,36 @@ export class CartService {
             throw new NotFoundException('Product not found');
         }
     
-        // Tìm sản phẩm đó trong giỏ hàng của user
         let cartItem = await this.cartRepository.findOne({ 
             where: { user: { id: userId }, product: { id: addToCartDto.productId } },
             relations: ['product']
         });
     
         if (cartItem) {
-            // Ép kiểu quantity về số trước khi cộng dồn
             cartItem.quantity = Number(cartItem.quantity) + Number(addToCartDto.quantity);
             cartItem.totalPrice = cartItem.quantity * product.price;
         } else {
             cartItem = this.cartRepository.create({
                 user: { id: userId },
                 product,
-                quantity: Number(addToCartDto.quantity), // Chắc chắn là số
+                quantity: Number(addToCartDto.quantity),
                 totalPrice: Number(addToCartDto.quantity) * product.price
             });
         }
     
         await this.cartRepository.save(cartItem);
     
-        // Lấy danh sách giỏ hàng của user
         const cart = await this.cartRepository.find({
             where: { user: { id: userId } },
             relations: ['product']
         });
     
-        // Tính tổng tiền của toàn bộ giỏ hàng
         const totalAmount = cart.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
         return { cart, totalAmount };
     }
     
+    async getCart(userId: string) {
+        return this.cartRepository.find({ where: { user: { id: userId } }, relations: ['product'] });
+      }
 }
