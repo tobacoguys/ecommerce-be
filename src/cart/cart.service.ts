@@ -68,7 +68,35 @@ export class CartService {
             throw new NotFoundException('Cart item not found');
         }
 
-        cartItem.quantity = updateCartDto.quantity;
+        cartItem.quantity += updateCartDto.quantity;
+        cartItem.totalPrice = cartItem.quantity * cartItem.product.price;
+
+        await this.cartRepository.save(cartItem);
+
+        const cart = await this.cartRepository.find({
+            where: { user: { id: cartItem.user.id } },
+            relations: ['product']
+        });
+
+        const totalAmount = cart.reduce((sum, item) => sum + Number(item.totalPrice), 0);
+
+        return { cart, totalAmount };
+    }
+
+    async decreaseCart(cartId: string, updateCartDto: UpdateCartDto): Promise<{ cart: Cart[], totalAmount: number }> {
+        const cartItem = await this.cartRepository.findOne({ 
+            where: { id: cartId },
+            relations: ['product', 'user'] 
+        });
+
+        if (!cartItem) {
+            throw new NotFoundException('Cart item not found');
+        }
+
+        cartItem.quantity -= updateCartDto.quantity;
+        if (cartItem.quantity < 0) {
+            cartItem.quantity = 0;
+        }
         cartItem.totalPrice = cartItem.quantity * cartItem.product.price;
 
         await this.cartRepository.save(cartItem);

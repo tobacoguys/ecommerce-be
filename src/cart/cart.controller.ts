@@ -26,4 +26,10 @@ export class CartController {
     async updateCart(@Param('cartId') cartId: string, @Body() updateCartDto: UpdateCartDto) {
         return this.cartService.updateCart(cartId, updateCartDto);
     }
+
+    @Patch('/decrease/:cartId')
+    @UseGuards(JwtAuthGuard)
+    async decreaseCart(@Param('cartId') cartId: string, @Body() updateCartDto: UpdateCartDto) {
+        return this.cartService.decreaseCart(cartId, updateCartDto);
+    }
 }
