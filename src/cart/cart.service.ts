@@ -110,4 +110,30 @@ export class CartService {
 
         return { cart, totalAmount };
     }
+
+    async removeCart(cartId: string, userId: string): Promise<{ cart: Cart[], totalAmount: number }> {
+        const cartItem = await this.cartRepository.findOne({ 
+            where: { id: cartId },
+            relations: ['user'] 
+        });
+
+        if (!cartItem) {
+            throw new NotFoundException('Cart item not found');
+        }
+
+        if (cartItem.user.id !== userId) {
+            throw new NotFoundException('You can only remove your own cart items');
+        }
+
+        await this.cartRepository.remove(cartItem);
+
+        const cart = await this.cartRepository.find({
+            where: { user: { id: userId } },
+            relations: ['product']
+        });
+
+        const totalAmount = cart.reduce((sum, item) => sum + Number(item.totalPrice), 0);
+
+        return { cart, totalAmount };
+    }
 }
