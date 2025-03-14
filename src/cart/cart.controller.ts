@@ -38,4 +38,10 @@ export class CartController {
     async removeCart(@Req() req: { user: User }, @Param('cartId') cartId: string) {
         return this.cartService.removeCart(cartId, req.user.id);
     }
+
+    @Delete('/delete')
+    @UseGuards(JwtAuthGuard)
+    async clearCart(@Req() req: { user: User }) {
+        return this.cartService.clearCart(req.user.id);
+    }
 }

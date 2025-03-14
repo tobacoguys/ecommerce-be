@@ -136,4 +136,19 @@ export class CartService {
 
         return { cart, totalAmount };
     }
+
+    async clearCart(userId: string): Promise<{ message: string }> {
+        const cartItems = await this.cartRepository.find({ 
+            where: { user: { id: userId } },
+            relations: ['user'] 
+        });
+
+        if (!cartItems.length) {
+            throw new NotFoundException('No cart items found for this user');
+        }
+
+        await this.cartRepository.remove(cartItems);
+
+        return { message: 'Cart cleared successfully' };
+    }
 }
