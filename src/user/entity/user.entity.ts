@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SellerRequest } from "./seller-request.entity";
 import Product from 'src/product/product.entity';
 import { Cart } from "src/cart/cart.entity";
-import { Order } from 'src/order/order.entity';
+import { Order } from 'src/order/entity/order.entity';
 
 export enum UserRole {
     USER = 'USER',
