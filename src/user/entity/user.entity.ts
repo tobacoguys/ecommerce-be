@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SellerRequest } from "./seller-request.entity";
 import Product from 'src/product/product.entity';
 import { Cart } from "src/cart/cart.entity";
+import { Order } from 'src/order/order.entity';
 
 export enum UserRole {
     USER = 'USER',
@@ -61,6 +62,9 @@ class User {
 
     @OneToMany(() => Cart, (cart) => cart.user)
     cart: Cart[];
+
+    @OneToMany(() => Order, (order) => order.user)
+    order: Order[];
 }
 
 export default User;
