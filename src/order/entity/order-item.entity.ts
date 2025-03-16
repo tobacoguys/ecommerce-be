@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Order } from "./order.entity";
-import Product from "src/product/product.entity";
+import { Exclude } from 'class-transformer';
+import { Order } from './order.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Product from 'src/product/product.entity';
 
 @Entity()
 export class OrderItem {
@@ -8,9 +9,10 @@ export class OrderItem {
     id: string;
 
     @ManyToOne(() => Order, (order) => order.item, { onDelete: 'CASCADE' })
+    @Exclude()
     order: Order;
 
-    @ManyToOne(() => Product, {onDelete: 'SET NULL'})
+    @ManyToOne(() => Product, { onDelete: 'SET NULL' })
     product: Product;
 
     @Column({ type: 'int' })
